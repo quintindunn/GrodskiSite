@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+{% block target %}"{{ subject.subject_id }}"{% endblock %}
+{% block content %}
+<style>
+    body {
+        background-image: url("{{ subject.background_image_url }}");
+        background-size: 100%;
+    }
+    iframe {
+        margin-top: 5vh;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+</style>
+
+<div class="content-section content-section-main" style="width: 70vw; padding: 4vh 4vw;">
+    <div>
+        {{ content |safe }}
+    </div>
+</div>
+{% endblock %}

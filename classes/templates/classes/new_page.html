@@ -1,0 +1,82 @@
+{% extends "core/base.html" %}
+{% block target %}"{{ subject.subject_id }}"{% endblock %}
+{% block content %}
+<style>
+    body {
+        background-image: url("{{ subject.background_image_url }}");
+        background-size: 100%;
+    }
+
+</style>
+    <div class="content-section content-section-main" style="width: 50vw; border-radius: 10px">
+    <h1 style="margin-top: 2vh">Create New Page</h1>
+        <form style=" width: 50vw; margin-left : 17vw;" method="post" action="">
+        {% csrf_token %}
+        <input name="redirect" type="hidden" value="{{ redirect }}">
+        <table>
+            <tr>
+                <td>
+                    <p>Class:</p>
+                </td>
+                <td>
+                    <label>
+                        <select name="subject" style="width: 8vw" required>
+                        <option value="" selected disabled hidden >Select a Class</option>
+
+                           {% for subject in subjects %}
+                               <option value="{{ subject.subject_id }}">{{ subject.subject_name }}</option>
+                           {% endfor %}
+                       </select>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Quarter:</p>
+                </td>
+                <td>
+                    <label>
+                        <select name="category" style="width: 8vw" required>
+                                <option value="" selected disabled hidden >Select a Category</option>
+
+                            {% for category in quarter %}
+                                <option value="{{ category.path }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Page Title:</p>
+                </td>
+                <td>
+                    <label>
+                        <input type="text" name="pageTitle" style="width: 8vw" required>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Document URL:</p>
+                </td>
+                <td>
+                    <label>
+                        <input type="text" name="documentURL" style="width: 8vw" required>
+                    </label>
+                </td>
+            </tr>
+
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <button class="btn btn-outline-info" style=" width: 15vw;" type="submit">Create New Page!</button>
+                </td>
+            </tr>
+        </table>
+        </form>
+
+    </div>
+{% endblock %}
+

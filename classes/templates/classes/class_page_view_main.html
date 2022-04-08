@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% block target %}"{{ subject.subject_id }}"{% endblock %}
+{% block content %}
+<style>
+    body {
+        background-image: url("{{ subject.background_image_url }}");
+        background-size: 100%;
+    }
+
+</style>
+    <div class="content-section content-section-main" style="width: 50vw; border-radius: 10px">
+    <u><h1>Welcome to Mr.Grodski’s {{ subject.subject_name }} class!</h1></u>
+    <p style="height: 2vh">&nbsp;</p>
+
+    {% for category in subject.subcategories.all %}
+        <div class="dropdown">
+          <button class="dropbtn">{{ category.name }}</button>
+          <div class="dropdown-content">
+          {% for page in category.subpages.all %}
+            <a href="{% url "site-subject-dynamic" pk_dynamic=subject.subject_id %}?path={{ category.path }}{{ page.path }}">{{ page.title }}</a>
+          {% endfor %}
+          {% if user.is_editor %}
+            <a href="{% url "new-page" %}?redirect={% url "site-subject-dynamic" pk_dynamic=subject.subject_id %}">New Page</a>
+          {% endif %}
+          </div>
+        </div>
+    {% endfor %}
+    {% if user.is_editor %}
+        <div class="dropdown" style="margin-left: 1vw;">
+            <div class="dropbtn">
+                <a style="display: block; color: white" href="{% url "new-category" %}?redirect={% url "site-subject-dynamic" pk_dynamic=subject.subject_id %}">New Category</a>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}
