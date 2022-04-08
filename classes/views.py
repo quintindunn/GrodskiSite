@@ -3,6 +3,7 @@ import requests
 from zipfile import ZipFile
 import base64
 from django.shortcuts import render, HttpResponse, redirect
+from django.contrib.auth.decorators import login_required
 from classes.models import Class, Page, Category
 from bs4 import BeautifulSoup
 from pathlib import Path
@@ -32,6 +33,7 @@ def google_doc_to_page(url):
     return html_file
 
 
+@login_required()
 def view_subject(request, pk_dynamic):
     # Check that user specified correct class and has permissions.
 
@@ -62,14 +64,16 @@ def view_subject(request, pk_dynamic):
     return render(request, template_name="classes/class_page_view_main.html", context=ctx)
 
 
+@login_required()
 def new_page(request):
+    if not request.user.is_editor:
+        return redirect("site-home")
     ctx = {"subjects": Class.objects.all(),
            "quarter": Category.objects.all()}
 
     if request.GET.get("redirect"):
         ctx['redirect'] = request.GET.get('redirect')
 
-    print(request.POST)
     if request.method == "POST":
         redirect_ = request.POST.get("redirect")
         subject = request.POST.get("subject")
@@ -100,7 +104,10 @@ def new_page(request):
     return render(request, template_name="classes/new_page.html", context=ctx)
 
 
+@login_required()
 def new_category(request):
+    if not request.user.is_editor:
+        return redirect("site-home")
     ctx = {"subjects": Class.objects.all()}
     if request.method == "GET":
         return render(request, "classes/new_category.html", context=ctx)
@@ -117,3 +124,40 @@ def new_category(request):
         subject_object.subcategories.add(category)
         subject_object.save()
         return redirect(request.GET.get("redirect"))
+
+
+@login_required()
+def new_class(request):
+    if not request.user.is_editor:
+        return redirect("site-home")
+    ctx = {}
+    if request.method == "GET":
+        return render(request, "classes/new_class.html", context=ctx)
+
+    if request.method == "POST":
+        class_name = request.POST.get("className")
+        if class_name:
+            subject_path = class_name.replace(" ", "-").lower().replace("/", "-").replace("\\", "-")
+            subject = Class(subject_name=class_name, subject_id=subject_path)
+            subject.save()
+            request.user.classes.add(subject)
+            request.user.save()
+            return redirect("/" + subject_path)
+        return render(request, "classes/new_class.html", context=ctx)
+
+
+@login_required()
+def change_background(request):
+    ctx = {"subjects": Class.objects.all()}
+
+    if request.method == "GET":
+        return render(request, "classes/change_background.html", context=ctx)
+
+    if request.method == "POST":
+        subject_object = Class.objects.filter(subject_id=request.POST.get("subject")).first()
+        file = list(request.FILES.values())[0]
+        if str(file).endswith(".png") or str(file).endswith(".jpg") or str(file).endswith(".jpeg"):
+            encoded = "data:image/png;base64," + base64.b64encode(file.read()).decode()
+            subject_object.background_image_url = encoded
+            subject_object.save()
+        return render(request, "classes/change_background.html", context=ctx)

@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-_zv9ax+fqrci19&u)(7$*ugv9+*v0lm5@3iptkguch^7qjsds&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.1.225", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.1.225", "127.0.0.1", "10.1.58.216", "0.0.0.0"]
 
 
 # Application definition
@@ -136,3 +136,6 @@ AUTH_USER_MODEL = 'users.User'
 site_settings = {
     "youtube_url": "https://www.youtube.com/user/MrGrodskiChemistry"
 }
+
+LOGIN_REDIRECT_URL = 'site-home'
+LOGIN_URL = 'login'

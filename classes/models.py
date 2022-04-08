@@ -32,7 +32,7 @@ class Category(models.Model):
 class Class(models.Model):
     subject_id = models.CharField(max_length=127, default="NULL")
     subject_name = models.CharField(max_length=127, default="NULL")
-    background_image_url = models.CharField(max_length=511, default="", null=True, blank=True)
+    background_image_url = models.CharField(max_length=32768, default="", null=True, blank=True)
 
     subcategories = models.ManyToManyField(Category, blank=True)
 

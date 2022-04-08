@@ -52,4 +52,4 @@ def new_page(request):
     category.save()
     return HttpResponse(request, "page")
 
-# http://127.0.0.1:8000/api/newpage?pageTitle=temp&path=/week1&documentURL=https://docs.google.com/document/d/1_TVgJV0vfni6IYrhoBiUUFtFt4fjtOBWgriXjt0XrRY/edit?usp=sharing&subject=chemistry&category=/quarter2
+
